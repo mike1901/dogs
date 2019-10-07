@@ -1,13 +1,14 @@
 <?php
 
-
 namespace classes;
 
 use interfaces\DogArrayInterface;
 use models\Dog;
+use models\DogGroup;
 
 /**
  * Class DogArray
+ *
  * @package classes
  */
 class DogArray implements DogArrayInterface
@@ -17,6 +18,7 @@ class DogArray implements DogArrayInterface
 
     /**
      * DogArray constructor.
+     *
      * @param DogArrayInterface $dogArray
      */
     public function __construct(DogArrayInterface $dogArray)
@@ -33,13 +35,34 @@ class DogArray implements DogArrayInterface
     }
 
     /**
-     * @param $name
-     * @param $age
-     * @param $owner
-     * @param $group
+     * @param string $name
+     * @param string $age
+     * @param string $owner
+     * @param string $image
+     * @param string $breed
+     * @param string $color
      */
-    public function newDog($name, $age, $owner, $group)
+    public function newDog(string $name, string $age, string $owner, string $image, string $breed, string $color)
     {
-        $this->dogs[] = new Dog($name, $age, $owner, $group);
+        $dog = new Dog($name, $age, $owner, $image);
+        $group = $this->getGroup($breed, $color);
+        $dog->setGroup($group);
+        $this->dogs[] = $dog;
+    }
+
+    /**
+     * @param string $breed
+     * @param string $color
+     * @return \models\DogGroup
+     */
+    public function getGroup(string $breed, string $color)
+    {
+        /**
+         * DB - класс для работы с БД не стал писать его
+         */
+        return DogGroup::findOne([
+            'breed' => $breed,
+            'color' => $color
+        ]);
     }
 }

@@ -4,6 +4,7 @@ namespace interfaces;
 
 /**
  * Interface DogArrayInterface
+ *
  * @package interfaces
  */
 interface DogArrayInterface
