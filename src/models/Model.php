@@ -48,6 +48,6 @@ class Model
      */
     public static function findOne(array $query)
     {
-        return new static();
+        return new self();
     }
 }
