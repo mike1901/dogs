@@ -15,4 +15,8 @@ interface DogArrayInterface
      * @return mixed
      */
     public function fill();
+
+    public function saveOnBase();
+
+    public function render();
 }

@@ -3,8 +3,6 @@
 namespace classes;
 
 use interfaces\DogArrayInterface;
-use models\Dog;
-use models\DogGroup;
 
 /**
  * Class DogArray
@@ -13,56 +11,44 @@ use models\DogGroup;
  */
 class DogArray implements DogArrayInterface
 {
-    protected $dogArray;
-    protected $dogs = [];
+    /**
+     * @var DogArrayInterface
+     */
+    protected $d;
 
     /**
      * DogArray constructor.
      *
-     * @param DogArrayInterface $dogArray
+     * @param DogArrayInterface $d
      */
-    public function __construct(DogArrayInterface $dogArray)
+    public function __construct(DogArrayInterface $d)
     {
-        $this->dogArray = $dogArray;
+        $this->d = $d;
     }
 
     /**
+     * Заполнение данных
+     *
      * @return mixed
      */
     public function fill()
     {
-        return $this->dogArray->fill();
+        return $this->d->fill();
     }
 
     /**
-     * @param string $name
-     * @param string $age
-     * @param string $owner
-     * @param string $image
-     * @param string $breed
-     * @param string $color
+     * Вывод результата
      */
-    public function newDog(string $name, string $age, string $owner, string $image, string $breed, string $color)
+    public function render()
     {
-        $dog = new Dog($name, $age, $owner, $image);
-        $group = $this->getGroup($breed, $color);
-        $dog->setGroup($group);
-        $this->dogs[] = $dog;
+        $this->d->render();
     }
 
     /**
-     * @param string $breed
-     * @param string $color
-     * @return \models\DogGroup
+     *  Сохранение записей в базу
      */
-    public function getGroup(string $breed, string $color)
+    public function saveOnBase()
     {
-        /**
-         * DB - класс для работы с БД не стал писать его
-         */
-        return DogGroup::findOne([
-            'breed' => $breed,
-            'color' => $color
-        ]);
+        $this->d->saveOnBase();
     }
 }

@@ -10,7 +10,7 @@ use models\DogGroup;
  *
  * @package providers
  */
-class DogCsv extends DogProvider
+class DogXml extends DogProvider
 {
     private $file;
     private $rows = [];
@@ -21,14 +21,23 @@ class DogCsv extends DogProvider
     }
 
     /**
-     * Парсим CSV
+     * Парсим XML
      */
     public function load()
     {
-        $lines = file($this->file, FILE_IGNORE_NEW_LINES);
-        foreach ($lines as $value) {
-            $this->rows[] = str_getcsv($value, ';');
+        $reader = new \XMLReader();
+        $fields = ['name', 'age', 'owner', 'breed', 'image', 'color'];
+        $reader->open($this->file);
+        while ($reader->read()) {
+            if ($reader->name == 'DOG') {
+                $r = [];
+                foreach ($fields as $field) {
+                    $r[] = $reader->getAttribute($field);
+                }
+                $this->rows[] = $r;
+            }
         }
+        $reader->close();
     }
 
     /**

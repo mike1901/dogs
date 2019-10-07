@@ -40,18 +40,11 @@ class Dog extends Model
     }
 
     /**
-     * @return array
-     */
-    public function profile(): ?array
-    {
-        return $this->attributes();
-    }
-
-    /**
      * @param array $query
+     * @return Model
      */
     public static function findDog(array $query)
     {
-
+        return self::findOne($query);
     }
 }

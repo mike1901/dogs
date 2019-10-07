@@ -2,9 +2,12 @@
 
 namespace models;
 
+use Exception;
+
 /**
  * Class Model
  *
+ * @property array $attributes
  * @package models
  */
 class Model
@@ -12,14 +15,14 @@ class Model
     /**
      * @param $name
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function __get($name)
     {
         /**
          * Проверим свойство
          */
-        if (in_array($name, $this->attributes())) {
+        if (in_array($name, $this->getAttributes())) {
             return $this->{$name};
         }
 
@@ -31,15 +34,15 @@ class Model
             return $this->{$method}();
         }
 
-        throw new \Exception("Attribute '{$name}'' not found in model: " . get_class($this));
+        throw new Exception("Attribute '{$name}'' not found in model: " . get_class($this));
     }
 
     /**
      * @return array
      */
-    public function attributes(): ?array
+    public function getAttributes(): ?array
     {
-        return get_class_vars($this) ?? [];
+        return (array)get_class_vars(get_class($this));
     }
 
     /**
@@ -48,6 +51,24 @@ class Model
      */
     public static function findOne(array $query)
     {
-        return new static();
+        /**
+         * В поиске использовать ActiveRecord, Это сильно упростит задачу
+         * ActiveRecord::findOne();
+         */
+        $model = new static();
+        foreach ($model->attributes as $key => $value) {
+            if (isset($query[$key])) {
+                $model->{$key} = $query[$key];
+            }
+        }
+        return $model;
+    }
+
+    /**
+     * @return array
+     */
+    public function profile(): ?array
+    {
+        return ['profile' => $this];
     }
 }
